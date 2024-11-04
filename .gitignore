@@ -1,0 +1,2 @@
+#Ignoring packages from javscript
+node_modules/
