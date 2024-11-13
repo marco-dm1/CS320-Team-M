@@ -8,7 +8,6 @@ export const Register = () => {
       password: '',
       confirmPassword: ''
     });
-  
     const handleSubmit = (e) => {
       e.preventDefault();
       console.log('Register attempt:', formData);
