@@ -11,7 +11,7 @@ dotenv.config();
 // The 'uri' is our connection string to the cluster
 // We are including 'clientOptions' to connect to a specific database
 // Our string is of this format:
-// mongodb+srv://<USERNAME>:<PASSWORD>@teammcluster.h2lnq.mongodb.net/?retryWrites=true&w=majority&appName=TeamMCluster/<DATABASE>
+// mongodb+srv://<USERNAME>:<PASSWORD>@<CLUSTER>.h2lnq.mongodb.net/?retryWrites=true&w=majority&appName=<CLUSTER>/<DATABASE>
 const uri = process.env.URI;
 const clientOptions = { dbName: 'ticket_trader' };
 
