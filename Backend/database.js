@@ -1,6 +1,5 @@
 // P/N means programmer note
 
-
 // Requiring dotenv for the .env file and mongoose for database interaction
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
