@@ -11,6 +11,7 @@ dotenv.config();
 // We are including 'clientOptions' to connect to a specific database
 // Our string is of this format:
 // mongodb+srv://<USERNAME>:<PASSWORD>@<CLUSTER>.h2lnq.mongodb.net/?retryWrites=true&w=majority&appName=<CLUSTER>/<DATABASE>
+// P/N: The .env file MUST be in the root directory to work
 const uri = process.env.URI;
 const clientOptions = { dbName: 'ticket_trader' };
 
@@ -22,6 +23,7 @@ const clientOptions = { dbName: 'ticket_trader' };
 // A schema has the instructions for a collection/table
 // 'versionKey' is false b/c otherwise we'd have an extra attribute '__v'
 const userSchema = new mongoose.Schema({ 
+    _id: {type: String, required: true},
     fname: { type: String, required: true }, 
     lname: { type: String, default: "" }, 
     balance: { type: Number, default: 0 }
@@ -30,7 +32,7 @@ const userSchema = new mongoose.Schema({
 });
 
 const ticketSchema = new mongoose.Schema({
-  sellerId: { type: mongoose.ObjectId, required: true },
+  sellerId: { type: String, required: true },
   eventName: { type: String, default: null }, 
   eventDate: { type: Date, default: null }
 }, {
@@ -40,7 +42,7 @@ const ticketSchema = new mongoose.Schema({
 // P/N: Offers and bids have the same attributes and as such can use the same schema
 const tradeSchema = new mongoose.Schema({ 
   ticketId: { type: mongoose.ObjectId, required: true }, 
-  userId: { type: mongoose.ObjectId, required: true }, 
+  userId: { type: String, required: true }, 
   price: { type: Number, required: true }
 }, {
   versionKey: false
@@ -59,46 +61,51 @@ const bidModel = mongoose.model("bid", tradeSchema);
 
 // Create a variable of type 'userModel' prepares data to be inserted into the collection
 // In order for it to be fully added, you must use '.save()'
-const createUser = async (fname, lname = "", balance = 0) => {
+const createUser = async (_id, fname, lname = "", balance = 0) => {
   let user = new userModel({ 
-      fname: fname,
-      lname: lname, 
-      balance: balance 
+    _id: _id,
+    fname: fname,
+    lname: lname, 
+    balance: balance 
   });
-  if (boolShowUserLogs) console.log(user.fname, user.lname, "has been created");
+  if (boolShowUserLogs) console.log("User has been created:\n  _id:", _id, "\n  fname:", user.fname, "\n  lname:", user.lname, "\n  balance:", balance);
   await user.save();
-  if (boolShowUserLogs) console.log(user.fname, user.lname, "has been saved");
-  return user._id;
+  if (boolShowUserLogs) console.log("User has been saved");
+  return user;
 };
 
 const createTicket = async (sellerId, eventName = "", eventDate = null) => {
   let ticket = new ticketModel({ 
-      sellerId: sellerId,
-      eventName: eventName, 
-      eventDate: eventDate 
+    sellerId: sellerId,
+    eventName: eventName, 
+    eventDate: eventDate 
   }); 
-  if (boolShowTicketLogs) console.log("Ticket has been created");
+  if (boolShowTicketLogs) console.log("Ticket has been created:\n  sellerId:", sellerId, "\n  eventName:", eventName, "\n  eventDate:", eventDate);
   await ticket.save();
   if (boolShowTicketLogs) console.log("Ticket has been saved");
-  return ticket._id;
+  return ticket;
 };
 
 const createOffer = async (ticketId, userId, price) => {
   let offer = new offerModel({ 
-      ticketId: ticketId,
-      userId: userId, 
-      price: price
+    ticketId: ticketId,
+    userId: userId, 
+    price: price
   }); 
+  if (boolShowTradeLogs) console.log("Offer has been created:\n  ticketId:", ticketId, "\n  userId:", userId, "\n  price:", price);
   await offer.save();
+  if (boolShowTradeLogs) console.log("Offer has been saved");
 };
 
 const createBid = async (ticketId, userId, price) => {
   let bid = new bidModel({ 
-      ticketId: ticketId,
-      userId: userId, 
-      price: price
+    ticketId: ticketId,
+    userId: userId, 
+    price: price
   }); 
+  if (boolShowTradeLogs) console.log("Bid has been created:\n  ticketId:", ticketId, "\n  userId:", userId, "\n  price:", price);
   await bid.save();
+  if (boolShowTradeLogs) console.log("Bid has been saved");
 };
 
 // DELETE
@@ -117,6 +124,22 @@ const deleteOffer = async (_id) => {
 
 const deleteBid = async (_id) => {
   await bidModel.deleteOne({ _id: _id });
+}
+
+const clearUsers = async () => {
+  await userModel.deleteMany({ });
+}
+
+const clearTickets = async () => {
+  await ticketModel.deleteMany({ });
+}
+
+const clearOffers = async () => {
+  await offerModel.deleteMany({ });
+}
+
+const clearBids = async () => {
+  await bidModel.deleteMany({ });
 }
 
 // UPDATE
@@ -170,11 +193,12 @@ const getTicketBids = async (_id) => {
 // MAIN CODE
 
 // Determines if console.logs run for insertions
-boolShowUserLogs = true
-boolShowTicketLogs = true
+boolShowUserLogs = false
+boolShowTicketLogs = false
+boolShowTradeLogs = false
 
 // These boolean variables change if different tests are run
-boolTestAllQuick = true
+boolTestAllQuick = false
 boolTestUser = false
 
 const main = async () => {
@@ -196,14 +220,6 @@ const main = async () => {
   }
 }; 
 
-const testAllQuick = async () => {
-  const testUserOne = await createUser("Franklin", "Roosevelt", 300);
-  const testUserTwo = await createUser("George", "Washington", 250);
-  const testTicket = await createTicket(testUserOne._id, "Patriotic Event");
-  const testOffer = await createOffer(testTicket._id, testUserOne._id, 40);
-  const testBid = await createBid(testTicket._id, testUserTwo._id, 20);
-}
-
 // Example test for functions
 const testAddUser = async () => {
   await createUser("Seth", "Brown", "150");
@@ -212,5 +228,21 @@ const testAddUser = async () => {
   await createUser("Paul", "Smith", 100);
   await createUser("Mary", "Jane", 20);
 };
+
+const testAllQuick = async () => {
+  const testUserOne = await createUser("045", "Franklin", "Roosevelt", 300);
+  const testUserTwo = await createUser("038", "George", "Washington", 250);
+  if (boolShowUserLogs) console.log("Test User One:", testUserOne, "\nTest User Two:", testUserTwo);
+  const testTicket = await createTicket(testUserOne._id, "Patriotic Event");
+  const testOffer = await createOffer(testTicket._id, testUserOne._id, 40);
+  const testBid = await createBid(testTicket._id, testUserTwo._id, 20);
+}
+
+const clearAll = async () => {
+  await clearUsers();
+  await clearTickets();
+  await clearOffers();
+  await clearBids();
+}
 
 main();
