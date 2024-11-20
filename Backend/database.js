@@ -1,12 +1,18 @@
 // P/N means programmer note
 
+
+// Requiring dotenv for the .env file and mongoose for database interaction
+const dotenv = require('dotenv');
 const mongoose = require('mongoose');
+
+// P/N: Honestly I don't know what this does, but it probably initializes the package
+dotenv.config();
 
 // The 'uri' is our connection string to the cluster
 // We are including 'clientOptions' to connect to a specific database
 // Our string is of this format:
 // mongodb+srv://<USERNAME>:<PASSWORD>@teammcluster.h2lnq.mongodb.net/?retryWrites=true&w=majority&appName=TeamMCluster/<DATABASE>
-const uri = "mongodb+srv://admin:fullaccess@teammcluster.h2lnq.mongodb.net/?retryWrites=true&w=majority&appName=TeamMCluster/ticket_trader";
+const uri = process.env.URI;
 const clientOptions = { dbName: 'ticket_trader' };
 
 // SCHEMA
