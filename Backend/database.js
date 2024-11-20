@@ -200,7 +200,7 @@ boolShowTradeLogs = false
 // These boolean variables change if different tests are run
 boolTestAllQuick = false
 boolTestUser = false
-
+ 
 const main = async () => {
   // We use try/finally so that we automatically disconnect once the promises are completed
   try {
