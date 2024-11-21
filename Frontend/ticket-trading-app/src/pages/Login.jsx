@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { emailSignIn } from '../components/auth';
 
 // Login Page Component
 export const Login = () => {
@@ -10,6 +11,7 @@ export const Login = () => {
   
     const handleSubmit = (e) => {
       e.preventDefault();
+      emailSignIn(formData.email,formData.password);
       console.log('Login attempt:', formData);
     };
   

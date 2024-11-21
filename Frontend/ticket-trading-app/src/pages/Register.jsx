@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { emailSignUp } from '../components/auth';
 
 export const Register = () => {
     const [formData, setFormData] = useState({
@@ -11,6 +12,7 @@ export const Register = () => {
   
     const handleSubmit = (e) => {
       e.preventDefault();
+      emailSignUp(formData);
       console.log('Register attempt:', formData);
     };
   
