@@ -59,7 +59,7 @@ const bidModel = mongoose.model("bid", tradeSchema);
 
 // INSERT
 
-// Create a variable of type 'userModel' prepares data to be inserted into the collection
+// Create a variable of type 'userModel' which prepares data to be inserted into the collection
 // In order for it to be fully added, you must use '.save()'
 const createUser = async (_id, fname, lname = "", balance = 0) => {
   let user = new userModel({ 
