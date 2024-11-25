@@ -19,7 +19,7 @@ cd CS320-Team-M
 2) Setup Backend\
 cd Backend\
 npm install\
-npm start
+node index.js
 
 The application should now be accessible at http://localhost:3000.
 
