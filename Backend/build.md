@@ -8,9 +8,6 @@ Download: https://nodejs.org/
 npm (version 8.0 or higher)
 Installed with Node.js.
 
-MongoDB (version 6.0 or higher)
-Download: https://www.mongodb.com/try/download/community
-
 Git
 Download: https://git-scm.com/
 
