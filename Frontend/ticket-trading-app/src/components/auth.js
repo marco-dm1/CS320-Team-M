@@ -28,7 +28,7 @@ export const emailSignUp = async(email,password)=>{
 export const emailSignIn = async(email,password)=>{
     try{
         const res = await signInWithEmailAndPassword(auth,email,password);
-        document.cookie = `email=${res.user.email}; token=${res.user.accessToken};`;
+        document.cookie = `token=${res.user.accessToken};`;
         window.location.href = "./Dashboard";
     }catch(err){
         console.error(err);
@@ -38,7 +38,7 @@ export const emailSignIn = async(email,password)=>{
 export const googleSignUp = async()=>{
     try{
         const res = await signInWithPopup(auth,GoogleProvider);
-        document.cookie = `email=${res.user.email}; token=${res.user.accessToken};`;
+        document.cookie = `token=${res.user.accessToken};`;
         window.location.href = "./Dashboard";
     }catch(err){
         console.error(err);
