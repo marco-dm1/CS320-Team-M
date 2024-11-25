@@ -32,14 +32,14 @@ The application should now be accessible at http://localhost:3000.
    The should only have one line in this format:
    URI = "mongodb+srv://<USERNAME>:<PASSWORD>@<CLUSTER>.h2lnq.mongodb.net/?retryWrites=true&w=majority&appName=<CLUSTER>/<DATABASE>"
 
-5) Start MongoDB
+4) Start MongoDB
 Ensure the MongoDB server is running on your local machine:
 
 mongodb
 
 
 
-7) Testing the Application
+5) Testing the Application
 Backend Tests
 To run the backend unit tests:
 
