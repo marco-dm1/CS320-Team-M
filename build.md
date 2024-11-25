@@ -24,21 +24,18 @@ cd CS320-Team-M
    npm install
    PORT=3000
    DATABASE_URL=<your_database_url>
-   npm start
-
-4) Setup Frontend
-   cd ticket-trading-app
-   npm install
-   npm run dev
-
+   npm start\
 
 The application should now be accessible at http://localhost:3000.
 
+3) Add a .env file in the root directory so that the backend has the correct connection string
+   The should only have one line in this format:
+   URI = "mongodb+srv://<USERNAME>:<PASSWORD>@<CLUSTER>.h2lnq.mongodb.net/?retryWrites=true&w=majority&appName=<CLUSTER>/<DATABASE>"
 
-4) Start MongoDB
+5) Start MongoDB
 Ensure the MongoDB server is running on your local machine:
 
-mongod
+mongodb
 
 
 
@@ -47,12 +44,6 @@ Backend Tests
 To run the backend unit tests:
 
 cd backend
-npm test
-
-Frontend Tests
-To run the frontend unit tests:
-
-cd frontend
 npm test
 
 
