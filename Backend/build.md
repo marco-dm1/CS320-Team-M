@@ -32,7 +32,7 @@ URI = "mongodb+srv://<USERNAME>:<PASSWORD>@<CLUSTER>.h2lnq.mongodb.net/?retryWri
 
 mongodb
 
-5) Testing the Application
+4) Testing the Application
 Backend Tests
 To run the backend unit tests:
 
