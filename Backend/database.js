@@ -61,7 +61,7 @@ const bidModel = mongoose.model("bid", tradeSchema);
 
 // Create a variable of type 'userModel' which prepares data to be inserted into the collection
 // In order for it to be fully added, you must use '.save()'
-const createUser = async (_id, fname, lname = "", balance = 0) => {
+const createUser = async (_id, fname = "", lname = "", balance = 0) => {
   let user = new userModel({ 
     _id: _id,
     fname: fname,
@@ -144,49 +144,82 @@ const clearBids = async () => {
 
 // UPDATE
 
-const incrementUserBalance = async (_id, inc) => {
-  await userModel.updateOne({ _id: _id }, { balance: balance + inc });
+const updateUserName = async (userId, fname = "", lname = "") => {
+    await userModel.updateOne({ _id: userId }, { fname: fname , lname: lname});
 }
 
-const decrementUserBalance = async (_id, dec) => {
-  await userModel.updateOne({ _id: _id }, { balance: balance - dec });
+const changeUserBalance = async (userId, change) => {
+  await userModel.updateOne({ _id: userId }, { balance: balance + change });
 }
 
-const setUserBalance = async (_id, newBalance) => {
-  await userModel.updateOne({ _id: _id }, { balance: newBalance });
+const incrementUserBalance = async (userId, inc) => {
+  await changeUserBalance(userId, inc); //userModel.updateOne({ _id: _id }, { balance: balance + inc });
 }
 
-const resetUserBalance = async (_id) => {
-  await setUserBalance(_id, 0);
+const decrementUserBalance = async (userId, dec) => {
+  await changeUserBalance(userId, -dec); //userModel.updateOne({ _id: _id }, { balance: balance - dec });
 }
 
-const updateTicketEventName = async (_id, newEventName) => {
-  await ticketModel.updateOne({ _id: _id }, { eventName: eventName });
+const setUserBalance = async (userId, newBalance) => {
+  await userModel.updateOne({ _id: userId }, { balance: newBalance });
 }
 
-const updateTicketEventDate = async (_id, newEventDate) => {
-  await ticketModel.updateOne({ _id: _id }, { eventDate: eventDate });
+const resetUserBalance = async (userId) => {
+  await setUserBalance(userId, 0);
+}
+
+const updateTicketEventName = async (ticketId, newEventName) => {
+  await ticketModel.updateOne({ _id: ticketId }, { eventName: eventName });
+}
+
+const updateTicketEventDate = async (ticketId, newEventDate) => {
+  await ticketModel.updateOne({ _id: ticketId }, { eventDate: eventDate });
 }
 
 // GET DATA
 
-const getUserBalance = async (_id) => {
-  const userBalance = await userModel.findById(_id, 'balance');
+const getUserBalance = async (userId) => {
+  const userBalance = await userModel.findById(userId, 'balance');
   return userBalance;
 }
 
-const getUserTickets = async (_id) => {
-  const userTickets = await ticketModel.find({ sellerId: _id }, 'ticketId');
+const getUserTickets = async (userId) => {
+  const userTickets = await ticketModel.find({ sellerId: userId });
   return userTickets;
 }
 
-const getTicketOffers = async (_id) => {
-  const ticketOffers = await offerModel.find({ ticketId: _id }, 'userId price');
+const getUserTicketIDs = async (userId) => {
+  const userTicketIDs = await ticketModel.find({ sellerId: userId }, '_id');
+  return userTicketIDs;
+}
+
+const getUserOffers = async (userId) => {
+  const userOffers = await offerModel.find({ userId: userId });
+  return userOffers;
+}
+
+const getUserOfferIDs = async (userId) => {
+  const userOfferIDs = await offerModel.find({ userId: userId }, '_id');
+  return userOfferIDs;
+}
+
+const getUserBids = async (userId) => {
+  const userBids = await bidsModel.find({ userId: userId });
+  return userBids;
+}
+
+const getUserBidIDs = async (userId) => {
+  const userBidIDs = await bidsModel.find({ userId: userId });
+  return userBidIDs;
+}
+
+const getTicketOffers = async (ticketId) => {
+  const ticketOffers = await offerModel.find({ ticketId: ticketId });
   return ticketOffers;
 }
 
-const getTicketBids = async (_id) => {
-  const ticketBids = await bidsModel.find({ ticketId: _id }, 'userId price');
+const getTicketBids = async (ticketId) => {
+  const ticketBids = await bidsModel.find({ ticketId: ticketId });
   return ticketBids;
 }
 
