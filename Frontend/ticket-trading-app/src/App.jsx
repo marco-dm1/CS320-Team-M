@@ -5,6 +5,8 @@ import Register from './pages/Register.jsx';
 import { Login } from './pages/Login.jsx';
 import Dashboard from './pages/Dashboard.jsx';
 import MyTickets from './pages/MyTickers.jsx';
+import Orders from './pages/Orders.jsx';
+import Listings from './pages/Listings.jsx';
 
 function App() {
   return (
@@ -15,6 +17,8 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/mytickets" element={<MyTickets />} />
+        <Route path="/orders" element={<Orders />}/>
+        <Route path="/listings" element={<Listings />}/>
       </Routes>
     </Router>
   );
