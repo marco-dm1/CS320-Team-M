@@ -1,8 +1,10 @@
 // P/N means programmer note
 
 // Requiring dotenv for the .env file and mongoose for database interaction
+// Assert is used for testing
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
+const assert = require('assert');
 
 // P/N: Honestly I don't know what this does, but it probably initializes the package
 dotenv.config();
@@ -170,6 +172,11 @@ const updateTicketEventDate = async (_id, newEventDate) => {
 
 // GET DATA
 
+const getUserData = async (_id) => {
+  const userData = await userModel.findById(_id);
+  return userData;
+}
+
 const getUserBalance = async (_id) => {
   const userBalance = await userModel.findById(_id, 'balance');
   return userBalance;
@@ -198,8 +205,9 @@ boolShowTicketLogs = false
 boolShowTradeLogs = false
 
 // These boolean variables change if different tests are run
+boolTestAddUser = false
+boolTestFetchUserInfo = false
 boolTestAllQuick = false
-boolTestUser = false
 
 const main = async () => {
   // We use try/finally so that we automatically disconnect once the promises are completed
@@ -210,8 +218,9 @@ const main = async () => {
     console.log("Connected to database");
 
     // Runs any desired tests
+    if (boolTestAddUser) await testAddUser();
+    if (boolTestFetchUserInfo) await testFetchUserInfo();
     if (boolTestAllQuick) await testAllQuick();
-    if (boolTestUser) await testAddUser();
 
   } finally {
     // Ensures that the client will close when you finish/error
@@ -220,13 +229,55 @@ const main = async () => {
   }
 }; 
 
-// Example test for functions
+// Tests for functions
 const testAddUser = async () => {
-  await createUser("Seth", "Brown", "150");
-  await createUser("Tim", undefined, 30);
-  await createUser("Tom");
-  await createUser("Paul", "Smith", 100);
-  await createUser("Mary", "Jane", 20);
+  await clearAll();
+  const u1 = await createUser(1, "Seth", "Brown", 150);
+  const u2 = await createUser(2, "Tim", "", 30);
+  const u3 = await createUser(3, "Tom");
+  const u4 = await createUser(4, "Paul", "Smith", 100);
+  const u5 = await createUser(5, "Mary", "Jane", 20);
+
+  assert(u1._id == 1);
+  assert(u2.fname == "Tim");
+  assert(u3.lname == "");
+  assert(u3.balance == 0);
+  assert(u4.lname == "Smith");
+  assert(u5.balance == 20);
+
+  console.log('testAddUser passed');
+  
+};
+
+const testFetchUserInfo = async () => {
+  await clearAll();
+  await createUser(1, "Seth", "Brown", 150);
+  await createUser(2, "Tim", "", 30);
+  await createUser(3, "Tom");
+  await createUser(4, "Paul", "Smith", 100);
+  await createUser(5, "Mary", "Jane", 20);
+
+  const u1 = await getUserData(1);
+  const u2 = await getUserData(2);
+  const u3 = await getUserData(3);
+  const u4 = await getUserData(4);
+  const u5 = await getUserData(5);
+
+  assert(u1._id == 1);
+  assert(u2.fname == "Tim");
+  assert(u3.lname == "");
+  assert(u3.balance == 0);
+  assert(u4.lname == "Smith");
+  assert(u5.balance == 20);
+
+  const u1_bal = await getUserBalance(1);
+  const u4_bal = await getUserBalance(4);
+
+  assert(u1_bal.balance == 150);
+  assert(u4_bal.balance == 100);
+
+  console.log('testFetchUserInfo passed');
+  
 };
 
 const testAllQuick = async () => {
